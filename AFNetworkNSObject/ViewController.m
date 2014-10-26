@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-
+#import "NSObject+Network.h"
 @interface ViewController ()
 
 @end
@@ -16,7 +16,14 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
+    
+    NSString *urlStr = @"http://ip.taobao.com/service/getIpInfo.php";
+    NSDictionary *paraDic = @{@"ip":@"202.108.22.103"};
+    [self getWithUrl:urlStr para:paraDic success:^(id responseObj) {
+        
+    } failure:^(id error) {
+        
+    }];
 }
 
 - (void)didReceiveMemoryWarning {

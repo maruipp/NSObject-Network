@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8442E76018888E640391F046 /* libPods-AFNetworkNSObject.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BD72D5C9BE12AE659C40D90 /* libPods-AFNetworkNSObject.a */; };
 		9C9BE0C019FCCF5600E4A8D8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C9BE0BF19FCCF5600E4A8D8 /* main.m */; };
 		9C9BE0C319FCCF5600E4A8D8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C9BE0C219FCCF5600E4A8D8 /* AppDelegate.m */; };
 		9C9BE0C619FCCF5600E4A8D8 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C9BE0C519FCCF5600E4A8D8 /* ViewController.m */; };
@@ -14,6 +15,8 @@
 		9C9BE0CB19FCCF5600E4A8D8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9C9BE0CA19FCCF5600E4A8D8 /* Images.xcassets */; };
 		9C9BE0CE19FCCF5600E4A8D8 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9C9BE0CC19FCCF5600E4A8D8 /* LaunchScreen.xib */; };
 		9C9BE0DA19FCCF5600E4A8D8 /* AFNetworkNSObjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C9BE0D919FCCF5600E4A8D8 /* AFNetworkNSObjectTests.m */; };
+		9C9BE0E519FCD06000E4A8D8 /* NSObject+Network.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C9BE0E419FCD06000E4A8D8 /* NSObject+Network.m */; };
+		9C9BE0E819FCD24E00E4A8D8 /* AFHTTPRequestOperationManager+HttpHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C9BE0E719FCD24E00E4A8D8 /* AFHTTPRequestOperationManager+HttpHeader.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -27,6 +30,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0BD72D5C9BE12AE659C40D90 /* libPods-AFNetworkNSObject.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AFNetworkNSObject.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0DA559AC03E66C0D513130C8 /* Pods-AFNetworkNSObject.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AFNetworkNSObject.release.xcconfig"; path = "Pods/Target Support Files/Pods-AFNetworkNSObject/Pods-AFNetworkNSObject.release.xcconfig"; sourceTree = "<group>"; };
+		28EB94C34445F2F49D0EBDDB /* Pods-AFNetworkNSObject.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AFNetworkNSObject.debug.xcconfig"; path = "Pods/Target Support Files/Pods-AFNetworkNSObject/Pods-AFNetworkNSObject.debug.xcconfig"; sourceTree = "<group>"; };
 		9C9BE0BA19FCCF5600E4A8D8 /* AFNetworkNSObject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AFNetworkNSObject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C9BE0BE19FCCF5600E4A8D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9C9BE0BF19FCCF5600E4A8D8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -40,6 +46,10 @@
 		9C9BE0D319FCCF5600E4A8D8 /* AFNetworkNSObjectTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AFNetworkNSObjectTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C9BE0D819FCCF5600E4A8D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9C9BE0D919FCCF5600E4A8D8 /* AFNetworkNSObjectTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AFNetworkNSObjectTests.m; sourceTree = "<group>"; };
+		9C9BE0E319FCD06000E4A8D8 /* NSObject+Network.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+Network.h"; sourceTree = "<group>"; };
+		9C9BE0E419FCD06000E4A8D8 /* NSObject+Network.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+Network.m"; sourceTree = "<group>"; };
+		9C9BE0E619FCD24E00E4A8D8 /* AFHTTPRequestOperationManager+HttpHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AFHTTPRequestOperationManager+HttpHeader.h"; sourceTree = "<group>"; };
+		9C9BE0E719FCD24E00E4A8D8 /* AFHTTPRequestOperationManager+HttpHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AFHTTPRequestOperationManager+HttpHeader.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8442E76018888E640391F046 /* libPods-AFNetworkNSObject.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -60,12 +71,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		209DD3CF379BCA631B8CDE77 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				28EB94C34445F2F49D0EBDDB /* Pods-AFNetworkNSObject.debug.xcconfig */,
+				0DA559AC03E66C0D513130C8 /* Pods-AFNetworkNSObject.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		9C9BE0B119FCCF5600E4A8D8 = {
 			isa = PBXGroup;
 			children = (
 				9C9BE0BC19FCCF5600E4A8D8 /* AFNetworkNSObject */,
 				9C9BE0D619FCCF5600E4A8D8 /* AFNetworkNSObjectTests */,
 				9C9BE0BB19FCCF5600E4A8D8 /* Products */,
+				209DD3CF379BCA631B8CDE77 /* Pods */,
+				9D0CD458E500A355652994F1 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -81,6 +103,10 @@
 		9C9BE0BC19FCCF5600E4A8D8 /* AFNetworkNSObject */ = {
 			isa = PBXGroup;
 			children = (
+				9C9BE0E619FCD24E00E4A8D8 /* AFHTTPRequestOperationManager+HttpHeader.h */,
+				9C9BE0E719FCD24E00E4A8D8 /* AFHTTPRequestOperationManager+HttpHeader.m */,
+				9C9BE0E319FCD06000E4A8D8 /* NSObject+Network.h */,
+				9C9BE0E419FCD06000E4A8D8 /* NSObject+Network.m */,
 				9C9BE0C119FCCF5600E4A8D8 /* AppDelegate.h */,
 				9C9BE0C219FCCF5600E4A8D8 /* AppDelegate.m */,
 				9C9BE0C419FCCF5600E4A8D8 /* ViewController.h */,
@@ -119,6 +145,14 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		9D0CD458E500A355652994F1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0BD72D5C9BE12AE659C40D90 /* libPods-AFNetworkNSObject.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -126,9 +160,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9C9BE0DD19FCCF5600E4A8D8 /* Build configuration list for PBXNativeTarget "AFNetworkNSObject" */;
 			buildPhases = (
+				9A991FF1C593ACC9C6FD4AE4 /* Check Pods Manifest.lock */,
 				9C9BE0B619FCCF5600E4A8D8 /* Sources */,
 				9C9BE0B719FCCF5600E4A8D8 /* Frameworks */,
 				9C9BE0B819FCCF5600E4A8D8 /* Resources */,
+				D929E7762ABCCBA937E08285 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -214,13 +250,48 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		9A991FF1C593ACC9C6FD4AE4 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		D929E7762ABCCBA937E08285 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-AFNetworkNSObject/Pods-AFNetworkNSObject-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		9C9BE0B619FCCF5600E4A8D8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9C9BE0E819FCD24E00E4A8D8 /* AFHTTPRequestOperationManager+HttpHeader.m in Sources */,
 				9C9BE0C619FCCF5600E4A8D8 /* ViewController.m in Sources */,
 				9C9BE0C319FCCF5600E4A8D8 /* AppDelegate.m in Sources */,
+				9C9BE0E519FCD06000E4A8D8 /* NSObject+Network.m in Sources */,
 				9C9BE0C019FCCF5600E4A8D8 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -341,6 +412,7 @@
 		};
 		9C9BE0DE19FCCF5600E4A8D8 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 28EB94C34445F2F49D0EBDDB /* Pods-AFNetworkNSObject.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = AFNetworkNSObject/Info.plist;
@@ -351,6 +423,7 @@
 		};
 		9C9BE0DF19FCCF5600E4A8D8 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0DA559AC03E66C0D513130C8 /* Pods-AFNetworkNSObject.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = AFNetworkNSObject/Info.plist;
@@ -412,6 +485,7 @@
 				9C9BE0DF19FCCF5600E4A8D8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		9C9BE0E019FCCF5600E4A8D8 /* Build configuration list for PBXNativeTarget "AFNetworkNSObjectTests" */ = {
 			isa = XCConfigurationList;
@@ -420,6 +494,7 @@
 				9C9BE0E219FCCF5600E4A8D8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
