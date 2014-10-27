@@ -8,7 +8,7 @@
 
 #import "NSObject+Network.h"
 #import "AFHTTPRequestOperationManager+HttpHeader.h"
-#import "AppDelegate.h"
+
 static const int kTimeOutInterval = 60;
 //static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 @implementation NSObject (Network)
