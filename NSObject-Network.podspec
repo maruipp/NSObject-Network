@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
 
   s.name         = "NSObject-Network"
   s.version      = "0.0.2"
-  s.summary      = "A short description of NSObject-Network."
+  s.summary      = "nick addition for AFNetworking with Exception"
 
   s.description  = <<-DESC
                    A longer description of NSObject-Network in Markdown format.
@@ -132,5 +132,6 @@ Pod::Spec.new do |s|
 
   # s.xcconfig = { "HEADER_SEARCH_PATHS" => "$(SDKROOT)/usr/include/libxml2" }
   # s.dependency "JSONKit", "~> 1.4"
+  s.dependency 'AFNetworking', '~> 2.5.0'
 
 end
