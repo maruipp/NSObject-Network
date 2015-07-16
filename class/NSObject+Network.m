@@ -7,112 +7,258 @@
 //
 
 #import "NSObject+Network.h"
-#import "AFHTTPRequestOperationManager+HttpHeader.h"
+#import "AFNetworking.h"
+#import "AFHTTPRequestSerializer+HttpHeader.h"
+const int kNetworkTimeOutInterval = 60;
 
-static const int kTimeOutInterval = 60;
-//static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 @implementation NSObject (Network)
-#pragma mark
-#pragma mark - network
 
-- (void)postWithUrl:(NSString *)urlStr para:(NSDictionary *)para success:(void (^)(id)) success  failure:(void (^)(id)) fail
+#pragma mark ============================== POST
+#pragma mark - 通用POST
+- (void)postWithUrl:(NSString *)urlStr para:(NSDictionary *)para success:(XTNetworkSuccessCallback) success  failure:(XTNetworkFailureCallback) fail
 {
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    [self postWithExtraHeader:nil url:urlStr para:para success:^(id data, id operation) {
+        if (success) {
+            success(data,operation);
+        }
+    } failure:^(id error, id operation) {
+        if (fail) {
+            fail(error,operation);
+        }
+    }];
+}
+
+#pragma mark - 可添加额外header信息的POST请求.
+- (void)postWithExtraHeader:(NSDictionary *)extraHeaderDict url:(NSString *)urlStr para:(NSDictionary *)para success:(XTNetworkSuccessCallback) success failure:(XTNetworkFailureCallback) fail
+{
+    AFHTTPRequestOperationManager* manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
-    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html",@"text/json", nil];
-    manager.requestSerializer.timeoutInterval = kTimeOutInterval;
-    [manager addYoucheRequestHeader];
-    [manager POST:urlStr parameters:para success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"%@",responseObject);
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html", @"text/json", @"application/json", nil];
+    manager.requestSerializer.timeoutInterval = kNetworkTimeOutInterval;
+    [manager.requestSerializer customHeader];
+    //添加额外header
+    [extraHeaderDict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        [manager.requestSerializer setValue:obj forHTTPHeaderField:key];
+    }];
+    [manager POST:urlStr parameters:para success:^(AFHTTPRequestOperation* operation, id responseObject) {
         @try {
             [self checkUnusual:responseObject];
-            success(responseObject);
+            success(responseObject,operation);
         }
         @catch (NSException *exception) {
-//            [ToastManager makeDebugToast:[NSString stringWithFormat:@"%@",exception]];
+
         }
         @finally {
             //do nothing
         }
-        //        [MBProgressHUD hideHUDForView:KEY_WINDOW animated:YES];
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        //        [MBProgressHUD hideHUDForView:KEY_WINDOW animated:YES];
-        fail(error);
+    } failure:^(AFHTTPRequestOperation* operation, NSError* error) {
+        fail(error,operation);
         NSLog(@"Error: %@", error);
+    }];
+}
+
+#pragma mark - 上传图片的POST
+- (void)postWithUrl:(NSString *)urlStr para:(NSDictionary *)para image:(UIImage *)uploadimage success:(XTNetworkSuccessCallback) success failure:(XTNetworkFailureCallback) fail
+{
+    AFHTTPRequestOperationManager* manager = [AFHTTPRequestOperationManager manager];
+    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html", @"text/json", @"application/json", nil];
+    manager.requestSerializer.timeoutInterval = kNetworkTimeOutInterval;
+    [manager.requestSerializer customHeader];
+    [manager POST:urlStr parameters:para constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        if (uploadimage) {
+            NSData *imageData = UIImageJPEGRepresentation(uploadimage, 1);
+            [formData appendPartWithFileData:imageData name:@"photo" fileName:@"photo" mimeType:@"image/jpeg"];
+        }
+    } success:^(AFHTTPRequestOperation* operation, id responseObject) {
+        NSLog(@"%@",responseObject);
+        @try {
+            [self checkUnusual:responseObject];
+            success(responseObject,operation);
+        }
+        @catch (NSException *exception) {
+
+        }
+        @finally {
+            //do nothing
+        }
+    } failure:^(AFHTTPRequestOperation* operation, NSError* error) {
+        fail(error,operation);
+    }];
+}
+
+#pragma mark - 传文件POST
+- (void)postWithUrl:(NSString*)urlStr para:(NSDictionary*)para fileDic:(NSDictionary*)fileDic success:(XTNetworkSuccessCallback)success failure:(XTNetworkFailureCallback)fail
+{
+    AFHTTPRequestOperationManager* manager = [AFHTTPRequestOperationManager manager];
+    
+    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html", @"text/json", @"application/json", nil];
+    manager.requestSerializer.timeoutInterval = kNetworkTimeOutInterval;
+    [manager.requestSerializer customHeader];
+    
+    [manager POST:urlStr
+       parameters:para
+constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+    [fileDic enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        NSString *filePath = obj;
+        NSString *keyStr = key;
+        [formData appendPartWithFileURL:[NSURL fileURLWithPath:filePath] name:keyStr error:nil];
     }];
     
 }
+          success:^(AFHTTPRequestOperation* operation, id responseObject) {
+              success(responseObject,operation);
+              NSLog(@"Success: %@", responseObject);
+          }
+          failure:^(AFHTTPRequestOperation* operation, NSError* error) {
+              fail(error,operation);
+              NSLog(@"Error: %@", error);
+          }
+     ];
+}
 
-#pragma mark
-#pragma mark - 上传图片
-- (void)postWithUrl:(NSString *)urlStr para:(NSDictionary *)para image:(UIImage *)uploadimage success:(void (^)(id)) success failure:(void(^)(id)) fail
+
+#pragma mark ============================== GET请求
+#pragma mark - 通用GET
+- (void)getWithUrl:(NSString *)urlStr para:(NSDictionary *)para success:(XTNetworkSuccessCallback) success failure:(XTNetworkFailureCallback) fail
 {
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    manager.responseSerializer = [AFJSONResponseSerializer serializer];
-    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html",@"text/json", nil];
-    manager.requestSerializer.timeoutInterval = kTimeOutInterval;
-    [manager addYoucheRequestHeader];
-    [manager POST:urlStr parameters:para constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
-        NSData *imageData = UIImageJPEGRepresentation(uploadimage, 1);
-        [formData appendPartWithFileData:imageData name:@"photo" fileName:@"photo" mimeType:@"image/jpeg"];
-    } success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"%@",responseObject);
-        @try {
-            [self checkUnusual:responseObject];
-            success(responseObject);
-        }
-        @catch (NSException *exception) {
-//            [ToastManager makeDebugToast:[NSString stringWithFormat:@"%@",exception]];
-        }
-        @finally {
-            //do nothing
-            
-        }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        fail(error);
-        NSLog(@"Error: %@", error);
+    [self getWithExtraHeader:nil url:urlStr para:para success:^(id data, id operation) {
+        success(data,operation);
+    } failure:^(id error, id operation) {
+        fail(error,operation);
     }];
 }
-
-#pragma mark
-#pragma mark - GET
-
-- (void)getWithUrl:(NSString *)urlStr para:(NSDictionary *)para success:(void (^)(id)) success failure:(void (^)(id)) fail{
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+#pragma mark - 可添加自定义header信息的GET
+- (void)getWithExtraHeader:(NSDictionary *)extraHeaderDict url:(NSString *)urlStr para:(NSDictionary *)para success:(XTNetworkSuccessCallback) success failure:(XTNetworkFailureCallback) fail
+{
+    AFHTTPRequestOperationManager* manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
-    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html",@"text/json", nil];
-    manager.requestSerializer.timeoutInterval = kTimeOutInterval;
-    [manager addYoucheRequestHeader];
-    [manager GET:urlStr parameters:para success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"%@",responseObject);
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html", @"text/json", @"application/json", nil];
+    manager.requestSerializer.timeoutInterval = kNetworkTimeOutInterval;
+    [manager.requestSerializer customHeader];
+    //添加额外header
+    [extraHeaderDict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        [manager.requestSerializer setValue:obj forHTTPHeaderField:key];
+    }];
+    [manager GET:urlStr parameters:para success:^(AFHTTPRequestOperation* operation, id responseObject) {
         @try {
             [self checkUnusual:responseObject];
-            success(responseObject);
+            success(responseObject,operation);
         }
         @catch (NSException *exception) {
-            //[ToastManager makeDebugToast:[NSString stringWithFormat:@"%@",exception]];
+
         }
         @finally {
             //do nothing
         }
-//        [MBProgressHUD hideHUDForView:KEY_WINDOW animated:YES];
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+
+    } failure:^(AFHTTPRequestOperation* operation, NSError* error) {
         NSLog(@"Error: %@", error);
-        fail(error);
-        //        [ToastManager makeDebugToast:[NSString stringWithFormat:@"%@",error]];
+        fail(error,operation);
     }];
 }
 
-- (void)checkUnusual:(NSDictionary *)dic
+#pragma mark ============================== PUT
+/**
+ 通用PUT请求.
+ */
+- (void)putWithUrl:(NSString *)urlStr para:(NSDictionary *)para success:(XTNetworkSuccessCallback) success failure:(XTNetworkFailureCallback) fail
+{
+    [self putWithExtraHeader:nil url:urlStr para:para success:^(id data, id operation) {
+        success(data,operation);
+    } failure:^(id error, id operation) {
+        fail(error,operation);
+    }];
+}
+
+/**
+ 可添加额外header信息的PUT请求.
+ */
+- (void)putWithExtraHeader:(NSDictionary *)extraHeaderDict url:(NSString *)urlStr para:(NSDictionary *)para success:(XTNetworkSuccessCallback) success failure:(XTNetworkFailureCallback) fail
+{
+    AFHTTPRequestOperationManager* manager = [AFHTTPRequestOperationManager manager];
+    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html", @"text/json", @"application/json", nil];
+    manager.requestSerializer.timeoutInterval = kNetworkTimeOutInterval;
+    [manager.requestSerializer customHeader];
+    //添加额外header
+    [extraHeaderDict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        [manager.requestSerializer setValue:obj forHTTPHeaderField:key];
+    }];
+    [manager PUT:urlStr parameters:para success:^(AFHTTPRequestOperation* operation, id responseObject) {
+        @try {
+            [self checkUnusual:responseObject];
+            success(responseObject,operation);
+        }
+        @catch (NSException *exception) {
+
+        }
+        @finally {
+            //do nothing
+        }
+    } failure:^(AFHTTPRequestOperation* operation, NSError* error) {
+        NSLog(@"Error: %@", error);
+        fail(error,operation);
+    }];
+}
+
+
+/**
+ 通用DELETE请求.
+ */
+- (void)deleteWithUrl:(NSString *)urlStr para:(NSDictionary *)para success:(XTNetworkSuccessCallback) success failure:(XTNetworkFailureCallback) fail
+{
+    [self deleteWithExtraHeader:nil url:urlStr para:para success:^(id data, id operation) {
+        success(data,operation);
+    } failure:^(id error, id operation) {
+        fail(error,operation);
+    }];
+}
+
+/**
+ 可添加额外header信息的DELETE请求.
+ */
+- (void)deleteWithExtraHeader:(NSDictionary *)extraHeaderDict url:(NSString *)urlStr para:(NSDictionary *)para success:(XTNetworkSuccessCallback) success failure:(XTNetworkFailureCallback) fail
+{
+    AFHTTPRequestOperationManager* manager = [AFHTTPRequestOperationManager manager];
+    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html", @"text/json", @"application/json", nil];
+    manager.requestSerializer.timeoutInterval = kNetworkTimeOutInterval;
+    [manager.requestSerializer customHeader];
+    //添加额外header
+    [extraHeaderDict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        [manager.requestSerializer setValue:obj forHTTPHeaderField:key];
+    }];
+    [manager DELETE:urlStr parameters:para success:^(AFHTTPRequestOperation* operation, id responseObject) {
+
+        @try {
+            [self checkUnusual:responseObject];
+            success(responseObject,operation);
+        }
+        @catch (NSException *exception) {
+
+        }
+        @finally {
+
+        }
+    } failure:^(AFHTTPRequestOperation* operation, NSError* error) {
+        NSLog(@"Error: %@", error);
+        fail(error,operation);
+    }];
+}
+
+#pragma mark ============================== 检查返回数据格式是否正确
+- (void)checkUnusual:(NSDictionary*)dic
 {
     //do something to check status return code in common
-    
-//    NSString *retcode = [dic objectForKey:@"retcode"];
-//    NSString *info = [[dic objectForKey:@"return"] objectForKey:@"val"];
-//    if (1001 != [retcode intValue]) {
-//        info = [ACTION_FEEDBACK_DICTIONARY objectForKey:retcode];
-//        [ToastManager makeToast:info];
-//    }
+
+    //    NSString *retcode = [dic objectForKey:@"retcode"];
+    //    NSString *info = [[dic objectForKey:@"return"] objectForKey:@"val"];
+    //    if (1001 != [retcode intValue]) {
+    //        info = [ACTION_FEEDBACK_DICTIONARY objectForKey:retcode];
+    //        [ToastManager makeToast:info];
+    //    }
 }
 
 @end
