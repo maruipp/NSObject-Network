@@ -16,7 +16,7 @@ typedef void (^XTNetworkFailureCallback) (id error,id operation);
 
 @interface NSObject (Network)
 
-
++ (void)setBaseURL:(NSURL *)baseUrl;
 
 #pragma mark ============================== POST
 /**

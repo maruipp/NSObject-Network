@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "NSObject+Network.h"
+
 @interface ViewController ()
 
 @end
@@ -16,12 +17,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    NSString *urlStr = @"http://ip.taobao.com/service/getIpInfo.php";
+    [NSObject setBaseURL:[NSURL URLWithString:@"http://ip.taobao.com"]];
+    NSString *urlStr = @"service/getIpInfo.php";
     NSDictionary *paraDic = @{@"ip":@"202.108.22.103"};
-    [self getWithUrl:urlStr para:paraDic success:^(id responseObj) {
+    [self getWithUrl:urlStr para:paraDic success:^(id data, id operation) {
         
-    } failure:^(id error) {
+    } failure:^(id error, id operation) {
         
     }];
 }

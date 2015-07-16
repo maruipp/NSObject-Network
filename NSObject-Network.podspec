@@ -16,8 +16,8 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "NSObject-Network"
-  s.version      = "0.0.2"
-  s.summary      = "nick addition for AFNetworking with Exception"
+  s.version      = "0.1.0"
+  s.summary      = "nice addition for AFNetworking with Exception"
 
   s.description  = <<-DESC
                    A longer description of NSObject-Network in Markdown format.
@@ -78,7 +78,7 @@ Pod::Spec.new do |s|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  s.source       = { :git => "https://github.com/maruipp/NSObject-Network.git", :tag => "0.0.2" }
+  s.source       = { :git => "https://github.com/maruipp/NSObject-Network.git", :tag => "0.1.0" }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #

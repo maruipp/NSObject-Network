@@ -9,9 +9,21 @@
 #import "NSObject+Network.h"
 #import "AFNetworking.h"
 #import "AFHTTPRequestSerializer+HttpHeader.h"
+#import <objc/runtime.h>
+static const NSString *BaseUrlKey = @"BaseUrlKeyStorage";
 const int kNetworkTimeOutInterval = 60;
 
 @implementation NSObject (Network)
+
++ (void)setBaseURL:(NSURL *)baseUrl
+{
+    objc_setAssociatedObject(self,&BaseUrlKey,baseUrl,OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
++ (NSURL *)baseUrl
+{
+    return objc_getAssociatedObject(self, &BaseUrlKey);
+}
 
 #pragma mark ============================== POST
 #pragma mark - 通用POST
@@ -132,7 +144,8 @@ constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
 #pragma mark - 可添加自定义header信息的GET
 - (void)getWithExtraHeader:(NSDictionary *)extraHeaderDict url:(NSString *)urlStr para:(NSDictionary *)para success:(XTNetworkSuccessCallback) success failure:(XTNetworkFailureCallback) fail
 {
-    AFHTTPRequestOperationManager* manager = [AFHTTPRequestOperationManager manager];
+    NSURL *baseUrl = [NSObject baseUrl];
+    AFHTTPRequestOperationManager* manager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:baseUrl];
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html", @"text/json", @"application/json", nil];
     manager.requestSerializer.timeoutInterval = kNetworkTimeOutInterval;
@@ -177,7 +190,8 @@ constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
  */
 - (void)putWithExtraHeader:(NSDictionary *)extraHeaderDict url:(NSString *)urlStr para:(NSDictionary *)para success:(XTNetworkSuccessCallback) success failure:(XTNetworkFailureCallback) fail
 {
-    AFHTTPRequestOperationManager* manager = [AFHTTPRequestOperationManager manager];
+    NSURL *baseUrl = [NSObject baseUrl];
+    AFHTTPRequestOperationManager* manager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:baseUrl];
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html", @"text/json", @"application/json", nil];
     manager.requestSerializer.timeoutInterval = kNetworkTimeOutInterval;
@@ -221,7 +235,8 @@ constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
  */
 - (void)deleteWithExtraHeader:(NSDictionary *)extraHeaderDict url:(NSString *)urlStr para:(NSDictionary *)para success:(XTNetworkSuccessCallback) success failure:(XTNetworkFailureCallback) fail
 {
-    AFHTTPRequestOperationManager* manager = [AFHTTPRequestOperationManager manager];
+    NSURL *baseUrl = [NSObject baseUrl];
+    AFHTTPRequestOperationManager* manager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:baseUrl];
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html", @"text/json", @"application/json", nil];
     manager.requestSerializer.timeoutInterval = kNetworkTimeOutInterval;
