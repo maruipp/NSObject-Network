@@ -43,7 +43,8 @@ const int kNetworkTimeOutInterval = 60;
 #pragma mark - 可添加额外header信息的POST请求.
 - (void)postWithExtraHeader:(NSDictionary *)extraHeaderDict url:(NSString *)urlStr para:(NSDictionary *)para success:(XTNetworkSuccessCallback) success failure:(XTNetworkFailureCallback) fail
 {
-    AFHTTPRequestOperationManager* manager = [AFHTTPRequestOperationManager manager];
+    NSURL *baseUrl = [NSObject baseUrl];
+    AFHTTPRequestOperationManager* manager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:baseUrl];
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html", @"text/json", @"application/json", nil];
     manager.requestSerializer.timeoutInterval = kNetworkTimeOutInterval;
@@ -72,7 +73,8 @@ const int kNetworkTimeOutInterval = 60;
 #pragma mark - 上传图片的POST
 - (void)postWithUrl:(NSString *)urlStr para:(NSDictionary *)para image:(UIImage *)uploadimage success:(XTNetworkSuccessCallback) success failure:(XTNetworkFailureCallback) fail
 {
-    AFHTTPRequestOperationManager* manager = [AFHTTPRequestOperationManager manager];
+    NSURL *baseUrl = [NSObject baseUrl];
+    AFHTTPRequestOperationManager* manager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:baseUrl];
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html", @"text/json", @"application/json", nil];
     manager.requestSerializer.timeoutInterval = kNetworkTimeOutInterval;
@@ -102,7 +104,8 @@ const int kNetworkTimeOutInterval = 60;
 #pragma mark - 传文件POST
 - (void)postWithUrl:(NSString*)urlStr para:(NSDictionary*)para fileDic:(NSDictionary*)fileDic success:(XTNetworkSuccessCallback)success failure:(XTNetworkFailureCallback)fail
 {
-    AFHTTPRequestOperationManager* manager = [AFHTTPRequestOperationManager manager];
+    NSURL *baseUrl = [NSObject baseUrl];
+    AFHTTPRequestOperationManager* manager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:baseUrl];
     
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html", @"text/json", @"application/json", nil];
