@@ -22,5 +22,7 @@
 								failure:(XTNetworkFailureCallback) fail;
 ```
 
+> POST,PATCH,DELETE等请求与GET请求类似，调用相应方法即可。
+
 ## 优势
 * 使用便捷，无需进行实例化即可调用。
