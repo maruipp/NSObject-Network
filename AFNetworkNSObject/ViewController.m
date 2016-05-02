@@ -18,6 +18,16 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [NSObject setBaseURL:[NSURL URLWithString:@"http://ip.taobao.com"]];
+    [NSObject enableCacheGetRequest];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+- (IBAction)buttonTapped:(id)sender {
+    
+    
     NSString *urlStr = @"service/getIpInfo.php";
     NSDictionary *paraDic = @{@"ip":@"202.108.22.103"};
     [self getWithUrl:urlStr para:paraDic success:^(id data, id operation) {
@@ -25,11 +35,7 @@
     } failure:^(id error, id operation) {
         
     }];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    
 }
 
 @end

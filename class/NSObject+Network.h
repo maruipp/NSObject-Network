@@ -16,8 +16,19 @@ typedef void (^XTNetworkFailureCallback) (id error,id operation);
 
 @interface NSObject (Network)
 
+#pragma mark - Config Methods
+///=============================================================================
+/// @name Config Methods
+///=============================================================================
+
 + (void)setBaseURL:(NSURL *)baseUrl;
 
++ (void)enableCacheGetRequest;
+
+#pragma mark - Request Methods
+///=============================================================================
+/// @name Request Methods
+///=============================================================================
 #pragma mark ============================== POST
 /**
  通用POST请求.

@@ -10,21 +10,45 @@
 #import "AFNetworking.h"
 #import "AFHTTPRequestSerializer+HttpHeader.h"
 #import <objc/runtime.h>
-static const NSString *BaseUrlKey = @"BaseUrlKeyStorage";
+#import <YYCache/YYCache.h>
+
+//baseurl associate key
+NSString * const kBaseUrlKey = @"BaseUrlKeyStorage";
+//enable cache associate key
+NSString * const kEnableCacheGetRequestKey = @"EnableCacheGetRequestKey";
+//cache name
+NSString * const kCacheName = @"NSObjectNetworkCache";
 const int kNetworkTimeOutInterval = 60;
+
+static YYCache *g_cache;
 
 @implementation NSObject (Network)
 
 + (void)setBaseURL:(NSURL *)baseUrl
 {
-    objc_setAssociatedObject(self,&BaseUrlKey,baseUrl,OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self,&kBaseUrlKey,baseUrl,OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 + (NSURL *)baseUrl
 {
-    return objc_getAssociatedObject(self, &BaseUrlKey);
+    return objc_getAssociatedObject(self, &kBaseUrlKey);
 }
 
++ (void)enableCacheGetRequest
+{
+    objc_setAssociatedObject(self, &kEnableCacheGetRequestKey, @YES, OBJC_ASSOCIATION_ASSIGN);
+}
+
++ (BOOL)cacheGetRequest
+{
+    return [objc_getAssociatedObject(self, &kEnableCacheGetRequestKey) boolValue];
+}
+
+#pragma mark -
++ (void)load
+{
+    g_cache = [[YYCache alloc] initWithName:kCacheName];
+}
 #pragma mark ============================== POST
 #pragma mark - 通用POST
 - (void)postWithUrl:(NSString *)urlStr para:(NSDictionary *)para success:(XTNetworkSuccessCallback) success  failure:(XTNetworkFailureCallback) fail
@@ -114,22 +138,22 @@ const int kNetworkTimeOutInterval = 60;
     
     [manager POST:urlStr
        parameters:para
-constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
-    [fileDic enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        NSString *filePath = obj;
-        NSString *keyStr = key;
-        [formData appendPartWithFileURL:[NSURL fileURLWithPath:filePath] name:keyStr error:nil];
-    }];
-    
-}
-          success:^(AFHTTPRequestOperation* operation, id responseObject) {
-              success(responseObject,operation);
-              NSLog(@"Success: %@", responseObject);
-          }
-          failure:^(AFHTTPRequestOperation* operation, NSError* error) {
-              fail(error,operation);
-              NSLog(@"Error: %@", error);
-          }
+        constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+            [fileDic enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+                NSString *filePath = obj;
+                NSString *keyStr = key;
+                [formData appendPartWithFileURL:[NSURL fileURLWithPath:filePath] name:keyStr error:nil];
+            }];
+            
+        }
+        success:^(AFHTTPRequestOperation* operation, id responseObject) {
+          success(responseObject,operation);
+          NSLog(@"Success: %@", responseObject);
+        }
+        failure:^(AFHTTPRequestOperation* operation, NSError* error) {
+          fail(error,operation);
+          NSLog(@"Error: %@", error);
+        }
      ];
 }
 
@@ -157,10 +181,17 @@ constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
     [extraHeaderDict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         [manager.requestSerializer setValue:obj forHTTPHeaderField:key];
     }];
-    [manager GET:urlStr parameters:para success:^(AFHTTPRequestOperation* operation, id responseObject) {
+    
+    AFHTTPRequestOperation* operation = [manager GET:urlStr parameters:para success:^(AFHTTPRequestOperation* operation, id responseObject) {
         @try {
             [self checkUnusual:responseObject];
             success(responseObject,operation);
+            
+            //cache response
+            if ([NSObject cacheGetRequest]) {
+                NSString *key = [NSString stringWithFormat:@"%@",operation.request.URL.absoluteString];
+                [g_cache setObject:responseObject forKey:key];
+            }
         }
         @catch (NSException *exception) {
 
@@ -173,6 +204,16 @@ constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
         NSLog(@"Error: %@", error);
         fail(error,operation);
     }];
+    
+    //read cached response
+    if ([NSObject cacheGetRequest]) {
+        NSString *key = [NSString stringWithFormat:@"%@",operation.request.URL.absoluteString];
+        id responseObj = [g_cache objectForKey:key];
+        if (responseObj) {
+            success(responseObj,operation);
+        }
+    }
+    
 }
 
 #pragma mark ============================== PUT
