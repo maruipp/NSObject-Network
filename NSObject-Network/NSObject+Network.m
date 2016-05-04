@@ -210,7 +210,9 @@ static YYCache *g_cache;
         NSString *key = [NSString stringWithFormat:@"%@",operation.request.URL.absoluteString];
         id responseObj = [g_cache objectForKey:key];
         if (responseObj) {
-            success(responseObj,operation);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                success(responseObj,operation);
+            });
         }
     }
     
